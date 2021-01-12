@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&display=swap');
+
+$orange: #f1828d;
+$lime: #fefad4;
+$peach: #fcd0ba;
+$aqua: #8fb9a8;
+$purple: #765d69;
+$white: #fff;
+$black: #000;
+$blue: #a1c4fd;
+$dark: #2a363b;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  list-style: none;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+body {
+  background-image: linear-gradient($aqua, $lime);
+  color: $white;
+  font-family: 'Comfortaa', sans-serif;
+  min-height: 100vh;
+}
+
+header,
+form {
+  min-height: 20vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+#entrySection {
+  display: flex;
+  font-size: 2rem;
+  margin: 1rem;
+  justify-content: center;
+}
+
+form {
+  font-size: 1rem;
+}
+
+.todo {
+  &-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  &-list {
+    min-width: 30%;
+  }
+
+  &-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 30%;
+    margin: 0.5rem 0;
+    background: $white;
+    color: $black;
+
+    &.done {
+      text-decoration: line-through;
+      opacity: .5;
+      transition: all .5s ease;
+    }
+
+    &.fall {
+      transform: translateY(8rem) rotateZ(20deg);
+      opacity: 0;
+      transition: all .5s ease;
+    }
+  }
+
+  &-info {
+    font-size: 1.5rem;
+    padding: 0 0.5rem;
+  }
+
+  &-input,
+  &-button {
+    padding: 0.5rem;
+    font-size: 2rem;
+    border: none;
+    background: $white;
+  }
+
+  &-nav {
+    display: flex;
+  }
+
+  &-check,
+  &-trash {
+    background: $orange;
+    color: $white;
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  &-check {
+    background: $aqua;
+  }
+
+  &-button {
+    background: darken($peach, 7%);
+    color: $white;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: darken($peach, 10%);
+    }
+  }
+}
+
+.fa-trash,
+.fa-check {
+  pointer-events: none;
+}
