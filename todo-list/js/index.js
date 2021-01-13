@@ -2,7 +2,7 @@
 const todoInput = document.querySelector('.todo-input');
 const entrySection = document.getElementById('entrySection');
 const todoButton = document.querySelector('.todo-button');
-const todoListItem = document.querySelectorAll('.todo-item');
+const checkBtn = document.querySelector('.todo-check');
 const todoList = document.querySelector('.todo-list');
 
 
@@ -38,7 +38,7 @@ let todoElements = [
 ];
 
 
-function renderDom(title, id, isDone) {
+function renderDom() {
   //  clear list
   todoList.innerHTML = '';
   //
@@ -100,21 +100,10 @@ function deleteToDo(elemId) {
 }
 
 
-
-function checkMark(checkId) {
-  let elemIndex = 0;
-  const item = checkId;
-  console.log(item);
-  for (const todoElem of todoElements) {
-    if (todoElem.id === checkId) {
-      console.log(todoElements[elemIndex].isDone = true);
+function checkMark(checkId, isDone) {
+  for (const li of document.querySelectorAll('.todo-item')) {
+    if (li.id === checkId.toString()) {
+      li.className = isDone ? 'todo-item done' : '';
     }
-    elemIndex++;
   }
-
-
-  // console.log(todoMark);
-  // if (item.classList[0] === 'todo-check') {
-  //   todoMark.classList.toggle('done');
-  // }
 }
