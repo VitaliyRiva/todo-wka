@@ -4,10 +4,13 @@ const entrySection = document.getElementById('entrySection');
 const todoButton = document.querySelector('.todo-button');
 const checkBtn = document.querySelector('.todo-check');
 const todoList = document.querySelector('.todo-list');
+const filterOption = document.querySelector('.filter-todo');
 
 
 //Event listeners
+document.addEventListener('DOMContentLoaded', getTodos);
 todoButton.addEventListener('click', addTodoHandler);
+filterOption.addEventListener('click', filterTodo);
 //Functions
 
 function updateUI() {
@@ -33,22 +36,23 @@ let todoElements = [
   {
     title: 'Научиться нормально думать2',
     id: 16,
-    isDone: false,
+    isDone: true,
   },
 ];
 
 
-function renderDom() {
+
+function renderDom(isDone, todoDelete, changeText) {
   //  clear list
   todoList.innerHTML = '';
   //
   todoElements.map(
-    item => {
-      const todoContainer = document.createElement('li');
-      todoContainer.classList.add('todo-item');
-      todoContainer.setAttribute('id', item.id);
-      todoContainer.innerHTML = `
-        <span class="todo-info">${ item.title}</span>
+      item => {
+        const todoContainer = document.createElement('li');
+        todoContainer.classList.add('todo-item');
+        todoContainer.setAttribute('id', item.id);
+        todoContainer.innerHTML = `
+        <span class="todo-info">${item.title}</span>
         <div class="todo-nav">
           <button class="todo-check" id="${'checkId' + item.id}">
             <i class="fas fa-check"></i>
@@ -57,13 +61,16 @@ function renderDom() {
             <i class="fas fa-trash"></i>
           </button>
         </div>`;
-      todoList.appendChild(todoContainer);
-      const todoTrash = document.getElementById(`${'removeId' + item.id}`);
-      todoTrash.addEventListener('click', deleteToDo.bind(null, item.id));
+        if (item.isDone) {
+          todoContainer.classList.add('done');
+        }
+        todoList.appendChild(todoContainer);
+        const todoTrash = document.getElementById(`${'removeId' + item.id}`);
+        todoTrash.addEventListener('click', deleteToDo.bind(null, item.id));
 
-      const todoCheck = document.getElementById(`${'checkId' + item.id}`)
-      todoCheck.addEventListener('click', checkMark.bind(null, item.id));
-    });
+        const todoCheck = document.getElementById(`${'checkId' + item.id}`)
+        todoCheck.addEventListener('click', checkMark.bind(null, item.id));
+      });
   updateUI();
 }
 
@@ -78,14 +85,12 @@ function addTodoHandler() {
     isDone: false
   };
   //pushing elements
+  saveLocalTodos(titleValue);
   todoElements.push(newTodo);
   //Clear Input Value
   todoInput.value = '';
   renderDom();
 }
-
-// todo: сделать удалениеобъекта
-//  при удалении удалять из массива по айди
 
 function deleteToDo(elemId) {
   let elemIndex = 0;
@@ -99,11 +104,83 @@ function deleteToDo(elemId) {
   renderDom();
 }
 
-
 function checkMark(checkId, isDone) {
-  for (const li of document.querySelectorAll('.todo-item')) {
-    if (li.id === checkId.toString()) {
-      li.className = isDone ? 'todo-item done' : '';
+  for (const li of todoElements) {
+    if (li.id === checkId) {
+      li.isDone = true
     }
   }
+  renderDom();
+}
+
+function filterTodo(e) {
+  console.log(e.target.value);
+  const todoElements = todoList.childNodes;
+  todoElements.forEach((todo) => {
+    switch (e.target.value) {
+      default:
+        todo.style.display = "flex";
+        break;
+      case "completed":
+        if (todo.classList.contains('done')) {
+          todo.style.display = "flex";
+        } else {
+          todo.style.display = "none";
+        }
+        break;
+      case "uncompleted":
+        if (!todo.classList.contains('done')) {
+          todo.style.display = "flex";
+        } else {
+          todo.style.display = "none";
+        }
+        break;
+    }
+  });
+}
+
+function saveLocalTodos(todo) {
+  let todoElements;
+  if (localStorage.getItem('todos') === null) {
+    todoElements = [];
+  } else {
+    todoElements = JSON.parse(localStorage.getItem('todos'));
+  }
+  todoElements.push(todo);
+  localStorage.setItem('todos', JSON.stringify(todoElements));
+}
+
+function getTodos() {
+  let todoElements;
+  if (localStorage.getItem('todos') === null) {
+    todoElements = [];
+  } else {
+    todoElements = JSON.parse(localStorage.getItem('todos'));
+  }
+  todoElements.map(
+      todo => {
+        console.log(todoElements);
+        const todoContainer = document.createElement('li');
+        todoContainer.classList.add('todo-item');
+        todoContainer.setAttribute('id', todo.id);
+        todoContainer.innerHTML = `
+        <span class="todo-info">${todo.title}</span>
+        <div class="todo-nav">
+          <button class="todo-check" id="${'checkId' + todo.id}">
+            <i class="fas fa-check"></i>
+          </button>
+          <button  class="todo-trash" id="${'removeId' + todo.id}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>`;
+        if (todo.isDone) {
+          todoContainer.classList.add('done');
+        }
+        todoList.appendChild(todoContainer);
+        const todoTrash = document.getElementById(`${'removeId' + todo.id}`);
+        todoTrash.addEventListener('click', deleteToDo.bind(null, todo.id));
+
+        const todoCheck = document.getElementById(`${'checkId' + todo.id}`)
+        todoCheck.addEventListener('click', checkMark.bind(null, todo.id));
+      });
 }

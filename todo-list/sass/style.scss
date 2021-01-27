@@ -127,3 +127,36 @@ form {
 .fa-check {
   pointer-events: none;
 }
+
+
+select {
+  width: 10rem;
+  cursor: pointer;
+  padding: 1rem;
+  margin: 0;
+  background: none;
+  appearance: none;
+  border: none;
+  box-shadow: none;
+  color: #ff6f47
+}
+
+.select {
+  margin: 1rem;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.select {
+  &::after {
+    content: "\25BC";
+    position: absolute;
+    background: #fbb998;
+    color: #fff;
+    padding: 1rem;
+    top: 0;
+    right: 0;
+    pointer-events: none;
+  }
+}
