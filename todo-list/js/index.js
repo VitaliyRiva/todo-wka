@@ -41,8 +41,7 @@ let todoElements = [
 ];
 
 
-
-function renderDom(isDone, todoDelete, changeText) {
+function createDom() {
   //  clear list
   todoList.innerHTML = '';
   //
@@ -52,15 +51,15 @@ function renderDom(isDone, todoDelete, changeText) {
         todoContainer.classList.add('todo-item');
         todoContainer.setAttribute('id', item.id);
         todoContainer.innerHTML = `
-        <span class="todo-info">${item.title}</span>
-        <div class="todo-nav">
-          <button class="todo-check" id="${'checkId' + item.id}">
-            <i class="fas fa-check"></i>
-          </button>
-          <button  class="todo-trash" id="${'removeId' + item.id}">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>`;
+          <span class="todo-info">${item.title}</span>
+          <div class="todo-nav">
+            <button class="todo-check" id="${'checkId' + item.id}">
+              <i class="fas fa-check"></i>
+            </button>
+            <button  class="todo-trash" id="${'removeId' + item.id}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>`;
         if (item.isDone) {
           todoContainer.classList.add('done');
         }
@@ -74,6 +73,11 @@ function renderDom(isDone, todoDelete, changeText) {
   updateUI();
 }
 
+
+function renderDom() {
+  createDom();
+}
+
 renderDom();
 
 function addTodoHandler() {
@@ -85,7 +89,7 @@ function addTodoHandler() {
     isDone: false
   };
   //pushing elements
-  saveLocalTodos(titleValue);
+  saveLocalTodos(newTodo);
   todoElements.push(newTodo);
   //Clear Input Value
   todoInput.value = '';
@@ -152,35 +156,13 @@ function saveLocalTodos(todo) {
 
 function getTodos() {
   let todoElements;
+  console.log(todoElements)
   if (localStorage.getItem('todos') === null) {
     todoElements = [];
+    console.log(todoElements)
   } else {
     todoElements = JSON.parse(localStorage.getItem('todos'));
+    console.log(todoElements)
   }
-  todoElements.map(
-      todo => {
-        console.log(todoElements);
-        const todoContainer = document.createElement('li');
-        todoContainer.classList.add('todo-item');
-        todoContainer.setAttribute('id', todo.id);
-        todoContainer.innerHTML = `
-        <span class="todo-info">${todo.title}</span>
-        <div class="todo-nav">
-          <button class="todo-check" id="${'checkId' + todo.id}">
-            <i class="fas fa-check"></i>
-          </button>
-          <button  class="todo-trash" id="${'removeId' + todo.id}">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>`;
-        if (todo.isDone) {
-          todoContainer.classList.add('done');
-        }
-        todoList.appendChild(todoContainer);
-        const todoTrash = document.getElementById(`${'removeId' + todo.id}`);
-        todoTrash.addEventListener('click', deleteToDo.bind(null, todo.id));
-
-        const todoCheck = document.getElementById(`${'checkId' + todo.id}`)
-        todoCheck.addEventListener('click', checkMark.bind(null, todo.id));
-      });
+  createDom();
 }
