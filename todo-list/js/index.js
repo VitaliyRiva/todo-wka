@@ -60,9 +60,11 @@ function createDom() {
               <i class="fas fa-trash"></i>
             </button>
           </div>`;
+
         if (item.isDone) {
           todoContainer.classList.add('done');
         }
+        todoElements.sort((a,b) => a.isDone - b.isDone ? 1 : -1);
         todoList.appendChild(todoContainer);
         const todoTrash = document.getElementById(`${'removeId' + item.id}`);
         todoTrash.addEventListener('click', deleteToDo.bind(null, item.id));
@@ -72,7 +74,6 @@ function createDom() {
       });
   updateUI();
 }
-
 
 function renderDom() {
   createDom();
@@ -145,7 +146,7 @@ function filterTodo(e) {
 
 function saveLocalTodos(todo) {
   let todoElements;
-  if (localStorage.getItem('todos') === null) {
+  if (localStorage.getItem('todos')) {
     todoElements = [];
   } else {
     todoElements = JSON.parse(localStorage.getItem('todos'));
@@ -155,14 +156,8 @@ function saveLocalTodos(todo) {
 }
 
 function getTodos() {
-  let todoElements;
-  console.log(todoElements)
   if (localStorage.getItem('todos') === null) {
-    todoElements = [];
-    console.log(todoElements)
   } else {
     todoElements = JSON.parse(localStorage.getItem('todos'));
-    console.log(todoElements)
   }
-  createDom();
 }
