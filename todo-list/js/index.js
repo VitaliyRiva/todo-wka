@@ -40,7 +40,6 @@ let todoElements = [
   },
 ];
 
-
 function createDom() {
   //  clear list
   todoList.innerHTML = '';
@@ -64,7 +63,7 @@ function createDom() {
         if (item.isDone) {
           todoContainer.classList.add('done');
         }
-        todoElements.sort((a,b) => a.isDone - b.isDone ? 1 : -1);
+        todoElements.sort((a,b) => (a.isDone === b.isDone) ? 0 : a.isDone ? -1 : 1);
         todoList.appendChild(todoContainer);
         const todoTrash = document.getElementById(`${'removeId' + item.id}`);
         todoTrash.addEventListener('click', deleteToDo.bind(null, item.id));
@@ -86,11 +85,12 @@ function addTodoHandler() {
   // add object with key and value
   const newTodo = {
     title: titleValue,
-    id: Math.floor(Math.random() * 10),
+    id: saveId(0),
     isDone: false
   };
   //pushing elements
   saveLocalTodos(newTodo);
+  saveId(newTodo.id);
   todoElements.push(newTodo);
   //Clear Input Value
   todoInput.value = '';
@@ -109,7 +109,7 @@ function deleteToDo(elemId) {
   renderDom();
 }
 
-function checkMark(checkId, isDone) {
+function checkMark(checkId) {
   for (const li of todoElements) {
     if (li.id === checkId) {
       li.isDone = true
@@ -144,9 +144,17 @@ function filterTodo(e) {
   });
 }
 
+function saveId(currId) {
+  localStorage.setItem('id', currId);
+  currId++;
+  return currId;
+}
+
+
+
 function saveLocalTodos(todo) {
   let todoElements;
-  if (localStorage.getItem('todos')) {
+  if (!localStorage.getItem('todos')) {
     todoElements = [];
   } else {
     todoElements = JSON.parse(localStorage.getItem('todos'));
@@ -156,8 +164,12 @@ function saveLocalTodos(todo) {
 }
 
 function getTodos() {
+  let todo;
   if (localStorage.getItem('todos') === null) {
+    todo = [];
   } else {
-    todoElements = JSON.parse(localStorage.getItem('todos'));
+    todo = JSON.parse(localStorage.getItem('todos'));
+    todoElements = todoElements.concat(todo);
   }
+  createDom();
 }
